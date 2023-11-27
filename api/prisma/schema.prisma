@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int           @id @default(autoincrement())
+  name     String
+  email    String        @unique
+  password String
+  projects UserProject[]
+  Project  Project[]
+
+  @@map("users")
+}
+
+model UserProject {
+  userId    Int     @map("user_id")
+  projectId Int     @map("project_id")
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+
+  @@id([userId, projectId])
+  @@map("user_projects")
+}
+
+model Project {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String
+  creatorId   Int           @map("creator_id")
+  creator     User          @relation(fields: [creatorId], references: [id])
+  members     UserProject[]
+  tasks       Task[]
+
+  @@map("projects")
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  createdAt   DateTime   @default(now()) @map("created_at")
+  status      Status
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   Int        @map("project_id")
+  TagsTask    TagsTask[]
+
+  @@map("tasks")
+}
+
+model Tag {
+  id       Int        @id @default(autoincrement())
+  title    String     @unique
+  TagsTask TagsTask[]
+
+  @@map("tags")
+}
+
+model TagsTask {
+  tagId  Int  @map("tag_id")
+  taskId Int  @map("task_id")
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  task   Task @relation(fields: [taskId], references: [id])
+
+  @@id([tagId, taskId])
+  @@map("tags_task")
+}
+
+enum Status {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDA
+}
