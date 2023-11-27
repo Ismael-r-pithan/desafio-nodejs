@@ -5,14 +5,23 @@ import { Env } from './env';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ZodFilter } from './pipes/zod-global.pipe';
+import cors from 'cors';
+import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.enableCors({
-    origin: 'https://desafio-reactjs-kohl.vercel.app/**'
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.setGlobalPrefix('api');
+
+  app.use(
+    cors({
+      origin: [
+        'https://desafio-reactjs-kohl.vercel.app',
+        'https://desafio-reactjs-kohl.vercel.app/*',
+        'https://desafio-reactjs-kohl.vercel.app/',
+        'http://localhost:3000'
+      ]
+    })
+  );
 
   app.enableVersioning({
     type: VersioningType.URI
