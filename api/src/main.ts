@@ -5,15 +5,12 @@ import { Env } from './env';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ZodFilter } from './pipes/zod-global.pipe';
-import cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: false
+    origin: 'https://desafio-reactjs-kohl.vercel.app/**'
   });
-
-  app.use(cors());
 
   app.setGlobalPrefix('api');
 
