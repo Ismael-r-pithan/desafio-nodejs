@@ -12,16 +12,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.use(
-    cors({
-      origin: [
-        'https://desafio-reactjs-kohl.vercel.app',
-        'https://desafio-reactjs-kohl.vercel.app/*',
-        'https://desafio-reactjs-kohl.vercel.app/',
-        'http://localhost:3000'
-      ]
-    })
-  );
+  app.enableCors({
+    origin: [
+      'https://desafio-reactjs-kohl.vercel.app',
+      'https://desafio-reactjs-kohl.vercel.app/*',
+      'https://desafio-reactjs-kohl.vercel.app/',
+      'http://localhost:3000'
+    ]
+  });
 
   app.enableVersioning({
     type: VersioningType.URI
